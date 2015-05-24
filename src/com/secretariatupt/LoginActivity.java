@@ -19,7 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-public class LoginActivity extends Activity  {
+public class LoginActivity extends Activity 
+{
 
 	 EditText etCnp, etPassword;
      Button btnLogin;
@@ -63,20 +64,29 @@ public class LoginActivity extends Activity  {
 
                  RestAPI api = new RestAPI();
                  boolean userAuth = false;
-                 try {
+                 Password pass = new Password();
+                 String hashedPassword = "";
+                 
+                 try 
+                 {
+                	 JSONObject jsonObj = api.GetSalt(params[0]);
+                	 JSONParser parser =  new JSONParser();
 
-                       // Call the User Authentication Method in API
-                       JSONObject jsonObj = api.UserAuthentication(params[0],
-                                   params[1]);
+                	 pass.setSalt(parser.parseString(jsonObj));
+                	 pass.setPassword(params[1]);
+                	 hashedPassword = pass.hashPassword();
+                	 
+                     // Call the User Authentication Method in API
+                     jsonObj = api.UserAuthentication(params[0], hashedPassword);
 
-                       //Parse the JSON Object to boolean
-                       JSONParser parser = new JSONParser();
-                       userAuth = parser.parseUserAuth(jsonObj);
-                       Cnp=params[0];
-                 } catch (Exception e) {
+                     //Parse the JSON Object to boolean
+                     userAuth = parser.parseBoolean(jsonObj);
+                     Cnp = params[0];
+                 } 
+                 catch (Exception e) 
+                 {
                        // TODO Auto-generated catch block
                        Log.d("AsyncLogin", e.getMessage());
-
                  }
                  return userAuth;
            }
@@ -95,8 +105,7 @@ public class LoginActivity extends Activity  {
 
                  //Check user validity
                  if (result) {
-                       Intent i = new Intent(LoginActivity.this,
-                                   MainActivity.class);
+                       Intent i = new Intent(LoginActivity.this, MenuActivity.class);
                        i.putExtra("CNP",Cnp);
                        startActivity(i);
                  }

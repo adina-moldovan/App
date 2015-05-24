@@ -37,6 +37,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateDemand"
+            android:label="@string/title_activity_create_demand" >
+        </activity>
+        <activity
+            android:name=".CreateCertificate"
+            android:label="@string/title_activity_create_certificate" >
+        </activity>
+        <activity
+            android:name=".CreateCertificateActivity"
+            android:label="@string/title_activity_create_certificate" >
+        </activity>
+        <activity
+            android:name=".CreateDemandActivity"
+            android:label="@string/title_activity_create_demand" >
+        </activity>
+        <activity
+            android:name=".GetMarksActivity"
+            android:label="@string/title_activity_get_marks" >
+        </activity>
+        <activity
+            android:name=".PayReceiptActivity"
+            android:label="@string/title_activity_pay_receipt" >
+        </activity>
+        <activity
+            android:name=".MenuActivity"
+            android:label="@string/title_activity_menu" >
+        </activity>
+        <activity
+            android:name=".StudentInfoActivity"
+            android:label="@string/title_activity_student_info" >
+        </activity>
+        <activity
+            android:name=".SetYearActivity"
+            android:label="@string/title_activity_set_year" >
+        </activity>
     </application>
 
 </manifest>

@@ -2,6 +2,8 @@ package com.secretariatupt;
 
 import org.json.JSONObject;
 
+import java.util.UUID;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -20,7 +22,7 @@ import android.os.Build;
 
 public class CreateUserActivity extends Activity {
 	 
-    EditText etCnp, etEmail, etPassword;
+    EditText etCnp, etEmail, etPassword, etConfirmPassword;
     Button btnCreateUser;
     Context context;
 
@@ -38,21 +40,25 @@ public class CreateUserActivity extends Activity {
           etCnp = (EditText) findViewById(R.id.et_cnp);
           etEmail = (EditText) findViewById(R.id.et_email);
           etPassword = (EditText) findViewById(R.id.et_cu_password);
+          etConfirmPassword = (EditText) findViewById(R.id.et_confirm_password);
+          
           btnCreateUser=(Button) findViewById(R.id.btn_createuser);
 
           btnCreateUser.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) 
+                {
                       // TODO Auto-generated method stub
 
-                      String cnp, email, password;
+                      String cnp, email, password, confirmPassword;
 
                       cnp = etCnp.getText().toString();
                       email = etEmail.getText().toString();
                       password = etPassword.getText().toString();
-
-                      new AsyncCreateUser().execute(cnp,email,password);
+                      confirmPassword = etConfirmPassword.getText().toString(); 
+                      
+                      new AsyncCreateUser().execute(cnp,email,password,confirmPassword);
 
                 }
           });
@@ -65,25 +71,35 @@ public class CreateUserActivity extends Activity {
     	protected Integer doInBackground(String... params) 
     	{
     		RestAPI api = new RestAPI();
+    		Password pass = new Password();
     		int regsteredState = 0;
-
-    		try 
-    		{
-
-            	     // Call the Create User Method in API
-             	     JSONObject jsonObj = api.CreateNewAccount(params[0], params[1], params[2]);
-    	    
-             	     //Parse the JSON Object to int
-              	    JSONParser parser = new JSONParser();	
-    	 	        regsteredState =  parser.parseCreateAcount(jsonObj);
-    		} 
-    		catch (Exception e) 
-    		{
-    			// TODO Auto-generated catch block
-                Log.d("AsyncCreateUser", e.getMessage());
-
-            }
+    		String hashedPassword = "";
+    		String salt = "";
     		
+    		//Check if there is a match between passwords
+    		if(params[2] == params[3])
+    		{
+	    		salt = UUID.randomUUID().toString();
+	    		pass.setPassword(params[2]);
+	    		pass.setSalt(salt);
+	    		hashedPassword = pass.hashPassword();
+	    		
+	    		try 
+	    		{
+	           	     // Call the Create User Method in API
+	           	     JSONObject jsonObj = api.CreateNewAccount(params[0], params[1], hashedPassword, salt);
+	    	   
+	           	     //Parse the JSON Object to int
+	           	    JSONParser parser = new JSONParser();	
+	   	 	        regsteredState =  parser.parseCreateAcount(jsonObj);
+	    		} 
+	    		catch (Exception e) 
+	    		{
+	    			// TODO Auto-generated catch block
+	                Log.d("AsyncCreateUser", e.getMessage());
+	
+	            }
+    		}
             return regsteredState;
         }
     	
@@ -97,6 +113,9 @@ public class CreateUserActivity extends Activity {
     		 if (result == 2) 
     		 {
                  Intent i = new Intent(CreateUserActivity.this, LoginActivity.class);
+                 Intent _i = getIntent();
+            	 String Cnp = _i.getStringExtra("CNP");
+            	 i.putExtra("CNP",Cnp);
                  startActivity(i);
              }
              else
