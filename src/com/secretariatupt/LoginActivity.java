@@ -71,8 +71,9 @@ public class LoginActivity extends Activity
                  {
                 	 JSONObject jsonObj = api.GetSalt(params[0]);
                 	 JSONParser parser =  new JSONParser();
-
-                	 pass.setSalt(parser.parseString(jsonObj));
+                	 String salt = parser.parseString(jsonObj);
+                	 
+                	 pass.setSalt(salt);
                 	 pass.setPassword(params[1]);
                 	 hashedPassword = pass.hashPassword();
                 	 

@@ -37,9 +37,10 @@ public class CreateUserActivity extends Activity {
           {
         	  Log.d("AsyncLogin", e.getMessage());
           }*/
+          context = this;
           etCnp = (EditText) findViewById(R.id.et_cnp);
           etEmail = (EditText) findViewById(R.id.et_email);
-          etPassword = (EditText) findViewById(R.id.et_cu_password);
+          etPassword = (EditText) findViewById(R.id.et_password);
           etConfirmPassword = (EditText) findViewById(R.id.et_confirm_password);
           
           btnCreateUser=(Button) findViewById(R.id.btn_createuser);
@@ -77,7 +78,7 @@ public class CreateUserActivity extends Activity {
     		String salt = "";
     		
     		//Check if there is a match between passwords
-    		if(params[2] == params[3])
+    		if(params[2].equals(params[3]))
     		{
 	    		salt = UUID.randomUUID().toString();
 	    		pass.setPassword(params[2]);
